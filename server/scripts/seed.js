@@ -48,7 +48,7 @@ async function populateDb() {
         author: book?.author,
         genres: book.genres,
         publisher: book?.publisher,
-        image: book?.coverImg,
+        image: book?.image,
         description: book?.description,
         rating: book?.rating,
         language: book?.language,
