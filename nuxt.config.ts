@@ -4,4 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ["@nuxt/ui"],
   ssr: true,
+  colorMode: {
+    preference: "light",
+  },
 });
