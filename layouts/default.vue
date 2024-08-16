@@ -1,6 +1,12 @@
 <template>
-  <div class="font-inter">
-    <slot />
+  <div class="font-inter group flex h-[calc(100dvh)] w-full overflow-hidden">
+    <div class="hidden md:block">
+      <SideNav />
+    </div>
+    <div class="flex flex-1 flex-col">
+      <BookSearchInput />
+      <slot />
+    </div>
   </div>
 </template>
 
@@ -27,3 +33,9 @@ useHead({
   ],
 });
 </script>
+
+<style>
+body {
+  min-height: calc(100dvh);
+}
+</style>

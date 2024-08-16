@@ -14,10 +14,10 @@ const client = new Client({
   connectionString: process.env.NUXT_DATABASE_URL,
 });
 
-async function runSeed() {
-  await client.connect();
-  const db = drizzle(client);
+await client.connect();
+export const db = drizzle(client);
 
+async function populateDb() {
   const parseCSV = async (filePath) => {
     const csvFile = fs.readFileSync(path.resolve(filePath), "utf8");
     return new Promise((resolve) => {
@@ -32,24 +32,33 @@ async function runSeed() {
 
   const bookData = await parseCSV("server/scripts/books.csv");
 
-  const insertIntoDatabase = async (book, index) => {
-    if (!book.isbn) {
-      console.error(`Skipping book at index ${index} due to missing ISBN`);
-      return Promise.resolve();
-    }
-    const response = await db.insert(books).values({
-      isbn: book.isbn,
-      title: book.title,
-      author: book.author,
-      year: book.year,
-      publisher: book.publisher,
-      image: book.coverImg,
-      description: book.description,
-      rating: book.rating,
-    }).returning();
+  // fetch all existing books
+  const existingBooks = await db.select({ isbn: books?.isbn }).from(books)
+  const existingBooksIsbn = existingBooks.map(book => book.isbn)
 
-    if (response) {
-      console.log(`Inserted book ${index + 1}`);
+  const insertIntoDatabase = async (book, index) => {
+    if (existingBooksIsbn.includes(book.isbn)) {
+      console.error(`skipped book ${index + 1}. Already exists`)
+    } else if (!book.isbn) {
+      console.error(`Skipped book at index ${index} due to missing ISBN`);
+    } else {
+      const response = await db.insert(books).values({
+        isbn: book?.isbn,
+        title: book?.title,
+        author: book?.author,
+        genres: book.genres,
+        publisher: book?.publisher,
+        image: book?.coverImg,
+        description: book?.description,
+        rating: book?.rating,
+        language: book?.language,
+        pages: book?.pages,
+        likedPercent: book?.likedPercent
+      }).returning();
+
+      if (response) {
+        console.log(`Inserted book ${index + 1}`);
+      }
     }
   }
 
@@ -61,7 +70,7 @@ async function runSeed() {
   await client.end()
 }
 
-runSeed();
+populateDb();
 
 
 
