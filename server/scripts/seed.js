@@ -30,7 +30,7 @@ async function populateDb() {
     });
   };
 
-  const bookData = await parseCSV("server/scripts/books.csv");
+  const bookData = await parseCSV("server/scripts/books copy.csv");
 
   // fetch all existing books
   const existingBooks = await db.select({ isbn: books?.isbn }).from(books)
@@ -39,8 +39,6 @@ async function populateDb() {
   const insertIntoDatabase = async (book, index) => {
     if (existingBooksIsbn.includes(book.isbn)) {
       console.error(`skipped book ${index + 1}. Already exists`)
-    } else if (!book.isbn) {
-      console.error(`Skipped book at index ${index} due to missing ISBN`);
     } else {
       const response = await db.insert(books).values({
         isbn: book?.isbn,
@@ -48,7 +46,7 @@ async function populateDb() {
         author: book?.author,
         genres: book.genres,
         publisher: book?.publisher,
-        image: book?.image,
+        image: book?.coverImg,
         description: book?.description,
         rating: book?.rating,
         language: book?.language,

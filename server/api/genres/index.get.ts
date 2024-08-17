@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
       item.genres && JSON.parse(item.genres.replace(/'/g, '"'))
   );
   let giantArray: string[] = [];
-  parsedResult.map((items) => {
+  (parsedResult || []).map((items) => {
     items.map((item: string) => {
       if (!giantArray.includes(item)) {
         giantArray.push(item);

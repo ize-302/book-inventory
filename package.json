@@ -13,8 +13,10 @@
     "db:push": "drizzle-kit push"
   },
   "dependencies": {
+    "@nuxt/image": "^1.7.0",
     "@nuxt/ui": "^2.18.4",
     "@paralleldrive/cuid2": "^2.2.2",
+    "circle-progress.vue": "^3.2.1",
     "drizzle-orm": "^0.30.10",
     "nuxt": "^3.12.4",
     "papaparse": "^5.4.1",

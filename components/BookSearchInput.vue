@@ -1,5 +1,5 @@
 <template>
-  <div class="border-b h-[60px] px-2">
+  <div class="border-b h-[60px] px-2 bg-white">
     <form
       class="relative flex flex-1 flex-shrink-0 w-full"
       @submit.prevent="handleSearchQuery"
@@ -13,7 +13,7 @@
         type="text"
         class="flex h-10 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full rounded-none border-0 px-10 py-6 m-1 focus-visible:ring-0 text-base md:text-sm"
         id="search"
-        placeholder="Search by book title..."
+        placeholder="Search over 50,000 book titles..."
         name="q"
         v-model="searchQuery"
       />

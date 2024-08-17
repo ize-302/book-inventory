@@ -3,39 +3,11 @@
   <div class="flex-1 flex flex-col overflow-hidden">
     <div class="flex flex-col h-full">
       <div class="flex-grow overflow-auto min-h-[200px]">
-        <div
-          class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 p-4"
-          id="page-top"
-        >
-          <USkeleton
-            v-if="loading"
-            v-for="item in Array(30).fill(0)"
-            class="h-[200px] w-full"
-          />
-          <nuxt-link
-            :to="`/${item.id}`"
-            v-else-if="!loading"
-            v-for="item in books"
-            class="bg-slate-100 aspect-[2/3] w-full rounded-md overflow-hidden relative"
-          >
-            <img
-              :src="item.image"
-              class="object-cover"
-              width="100%"
-              height="100%"
-              style="
-                position: absolute;
-                height: 100%;
-                width: 100%;
-                inset: 0px;
-                color: transparent;
-              "
-            />
-          </nuxt-link>
-        </div>
+        <BooksGrid :loading="loading" :books="books" :skeletonCount="30" />
       </div>
-      <div class="mt-auto p-4 border-t flex justify-center">
+      <div class="mt-auto p-4 border-t flex justify-center bg-white">
         <UPagination
+          :max="2"
           size="md"
           v-model="page"
           :page-count="30"

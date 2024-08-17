@@ -3,7 +3,7 @@
     <div class="hidden md:block">
       <SideNav />
     </div>
-    <div class="flex flex-1 flex-col">
+    <div class="flex flex-1 flex-col bg-slate-50">
       <BookSearchInput />
       <slot />
     </div>
