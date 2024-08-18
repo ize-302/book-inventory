@@ -34,7 +34,7 @@ useHead({
 });
 </script>
 
-<style>
+<style scoped>
 body {
   min-height: calc(100dvh);
 }

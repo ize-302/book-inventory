@@ -1,6 +1,6 @@
 <template>
-  <div class="flex-1 flex flex-col overflow-auto px-4 pb-20">
-    <div class="my-4">
+  <div class="px-4 pb-20">
+    <div class="my-4 mb-10">
       <UButton
         icon="i-heroicons-arrow-left"
         variant="ghost"
@@ -33,7 +33,7 @@
           width="100%"
         />
       </div>
-      <div class="max-w-[800px]">
+      <div>
         <h1 class="mb-2 text-2xl md:text-5xl font-bold">{{ book?.title }}</h1>
         <p v-if="book?.author" class="mb-1 text-slate-500 text-lg">
           {{ book.author }}
@@ -93,5 +93,9 @@ const fetchBook = async () => {
 onMounted(async () => {
   await nextTick();
   await fetchBook();
+});
+
+definePageMeta({
+  layout: "detail",
 });
 </script>

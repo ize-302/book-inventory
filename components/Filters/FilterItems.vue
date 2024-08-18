@@ -31,7 +31,7 @@
     >
       <!-- selected items -->
       <UCheckbox
-        v-if="queryStringArray.length"
+        v-if="queryStringArray.length > 0"
         color="green"
         :key="item"
         v-for="item in queryStringArray"
@@ -99,24 +99,8 @@ const unselectedItems = computed(() => {
     .slice(0, props.limit);
 });
 
-// const sortedItems = computed(() => {
-//   return props.items.slice(0, props.limit).sort((a, b) => {
-//     const indexA = queryStringArray.value.indexOf(a);
-//     const indexB = queryStringArray.value.indexOf(b);
-
-//     if (indexA === -1 && indexB === -1) {
-//       // If both letters are not in priorityLetters, sort alphabetically
-//       return a.localeCompare(b);
-//     } else if (indexA === -1) {
-//       // If a is not in priorityLetters but b is, b comes first
-//       return 1;
-//     } else if (indexB === -1) {
-//       // If b is not in priorityLetters but a is, a comes first
-//       return -1;
-//     } else if (indexB === 1 && indexA === 1) {
-//       // If both are in priorityLetters, sort based on their index in priorityLetters
-//       return indexA - indexB;
-//     }
-//   });
-// });
+onMounted(() => {
+  console.log("+++", queryStringArray.value);
+  console.log(">>>", route.query[props.filterType]);
+});
 </script>
