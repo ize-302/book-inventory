@@ -1,5 +1,15 @@
 # Book Inventory app
 
+An inventory app with the ability to search over 50,000 books. Books can further be filtered based on authors, genres, languages and awards
+
+[Demo](https://book-inventory-nuxt.vercel.app/)
+
+## Stack
+
+- Nuxt3
+- NuxtUI
+- Supabase with DrizzleORM
+
 ## Setup
 
 1. Create a Postgresql database
