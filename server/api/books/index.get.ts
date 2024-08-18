@@ -1,25 +1,17 @@
-import pkg from "pg";
-import { books } from "../../../db/schema";
-import { drizzle } from "drizzle-orm/node-postgres";
-import { and, desc, like, count, asc, sql } from "drizzle-orm";
+import { count, asc, sql } from "drizzle-orm";
+import { books } from "~/db/schema";
+import { db } from "~/db";
 
 const ITEMS_PER_PAGE = 30;
 
 export default defineEventHandler(async (event) => {
-  const { Client } = pkg;
-  const client = new Client({
-    connectionString: process.env.NUXT_DATABASE_URL,
-  });
-
-  await client.connect();
-  const db = drizzle(client);
-
   const query = getQuery(event);
 
   let q = query.q ?? "";
   let languages = query.languages ?? "";
   let authors = query.authors ?? "";
   let genres = query.genres ?? "";
+  let awards = query.awards ?? "";
   let page = Math.max(1, Number(query.page) || 1);
 
   let whereClause = sql`TRUE`;
@@ -56,6 +48,17 @@ export default defineEventHandler(async (event) => {
     );
     whereClause = sql`${whereClause} AND (${sql.join(
       genresConditions,
+      sql` OR `
+    )})`;
+  }
+
+  if (awards) {
+    const awardsArray = awards.toString().split(",");
+    let awardsConditions = awardsArray.map(
+      (award) => sql`${books.awards} ILIKE ${`%${award}%`}`
+    );
+    whereClause = sql`${whereClause} AND (${sql.join(
+      awardsConditions,
       sql` OR `
     )})`;
   }

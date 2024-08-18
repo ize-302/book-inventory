@@ -1,42 +1,39 @@
 <template>
   <FiltersSearchInput
-    v-if="!loading"
-    :placeholder="`Filter through thousands of authors...`"
+    :placeholder="`Find authors...`"
     v-model="query"
+    @submit="fetchAuthors()"
   />
   <FiltersFilterItems
-    :items="filteredAuthors"
-    :totalCount="authors.length"
+    :items="authors"
     :loading="loading"
-    :limit="150"
+    :limit="50"
     filterType="authors"
   />
 </template>
 
 <script setup>
 const authors = ref([]);
-const filteredAuthors = ref([]);
 const query = ref("");
 const loading = ref(true);
 
 watch(query, async (newQuery, oldQuery) => {
-  if (newQuery.length > 0) {
-    const result = [...authors.value]
-      .map((item) => item.toLowerCase())
-      .filter((author) => author.includes(newQuery.toLowerCase()));
-    filteredAuthors.value = result;
-  } else if (newQuery.length === 0) {
-    filteredAuthors.value = authors.value;
+  if (query.value.length === 0) {
+    await fetchAuthors();
   }
 });
 
-onMounted(async () => {
-  await nextTick();
+const fetchAuthors = async () => {
+  loading.value = true;
   try {
-    const result = await $fetch(`/api/authors`);
+    const result = await $fetch(`/api/authors?q=${query.value}`);
     authors.value = result;
-    filteredAuthors.value = result;
     loading.value = false;
   } catch (error) {}
+};
+
+onMounted(async () => {
+  await nextTick();
+  await fetchAuthors();
 });
 </script>

@@ -31,7 +31,7 @@ const fetchBooks = async () => {
     route.query.authors ?? ""
   }&languages=${route.query.languages ?? ""}&genres=${
     route.query.genres ?? ""
-  }`;
+  }&awards=${route.query.awards ?? ""}`;
   loading.value = true;
   try {
     const result = await $fetch(`/api/books?${queryString}`);
@@ -85,6 +85,13 @@ watch(
 
 watch(
   () => route.query.q,
+  async () => {
+    await resetPage();
+  }
+);
+
+watch(
+  () => route.query.awards,
   async () => {
     await resetPage();
   }

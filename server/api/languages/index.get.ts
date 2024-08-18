@@ -1,16 +1,23 @@
-import pkg from "pg";
-import { books } from "../../../db/schema";
-import { drizzle } from "drizzle-orm/node-postgres";
+import { books } from "~/db/schema";
+import { db } from "~/db";
+import { sql } from "drizzle-orm";
 
 export default defineEventHandler(async (event) => {
-  const { Client } = pkg;
-  const client = new Client({
-    connectionString: process.env.NUXT_DATABASE_URL,
-  });
-  await client.connect();
-  const db = drizzle(client);
+  const query = getQuery(event);
+  let q = query.q ?? "";
 
-  let result = await db.select({ language: books.language }).from(books);
+  let whereClause = sql`TRUE`;
+  if (query) {
+    whereClause = sql`${books.language} ILIKE ${`%${q}%`}`;
+  }
+
+  let result = await db
+    .select({ language: books.language })
+    .from(books)
+    .where(whereClause)
+    .groupBy(books.language)
+    .orderBy(books.language)
+    .limit(100);
   const allLanguages: string[] = [];
   let languages = result.map((row) => row.language);
   languages.map((language: string | null) => {

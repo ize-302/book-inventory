@@ -1,12 +1,11 @@
 <template>
   <FiltersSearchInput
-    v-if="!loading"
     :placeholder="`Filter through a hundred genres...`"
     v-model="query"
+    @submit="fetchGenres()"
   />
   <FiltersFilterItems
-    :items="filteredGenres"
-    :totalCount="genres.length"
+    :items="genres"
     :loading="loading"
     :limit="100"
     filterType="genres"
@@ -15,28 +14,26 @@
 
 <script setup>
 const genres = ref([]);
-const filteredGenres = ref([]);
 const query = ref("");
 const loading = ref(true);
 
 watch(query, async (newQuery, oldQuery) => {
-  if (newQuery.length > 0) {
-    const result = [...genres.value]
-      .map((item) => item.toLowerCase())
-      .filter((genre) => genre.includes(newQuery.toLowerCase()));
-    filteredGenres.value = result;
-  } else if (newQuery.length === 0) {
-    filteredGenres.value = authors.value;
+  if (query.value.length === 0) {
+    await fetchGenres();
   }
 });
 
-onMounted(async () => {
-  await nextTick();
+const fetchGenres = async () => {
+  loading.value = true;
   try {
-    const result = await $fetch(`/api/genres`);
+    const result = await $fetch(`/api/genres?q=${query.value}`);
     genres.value = result;
-    filteredGenres.value = result;
     loading.value = false;
   } catch (error) {}
+};
+
+onMounted(async () => {
+  await nextTick();
+  await fetchGenres();
 });
 </script>

@@ -1,5 +1,5 @@
 module.exports = {
-  schema: "./db/schema.js",
+  schema: "./db/schema.ts",
   out: "./drizzle",
   dialect: "postgresql",
   driver: "turso",

@@ -1,24 +1,27 @@
-import pkg from "pg";
-import { books } from "../../../db/schema";
-import { drizzle } from "drizzle-orm/node-postgres";
+import { books } from "~/db/schema";
+import { db } from "~/db";
+import { sql } from "drizzle-orm";
 
 export default defineEventHandler(async (event) => {
-  const { Client } = pkg;
-  const client = new Client({
-    connectionString: process.env.NUXT_DATABASE_URL,
-  });
-  await client.connect();
-  const db = drizzle(client);
+  const query = getQuery(event);
+  let q = query.q ?? "";
+
+  let whereClause = sql`TRUE`;
+  if (query) {
+    whereClause = sql`${books.author} ILIKE ${`%${q}%`}`;
+  }
 
   let authors = await db
     .select({ author: books.author })
     .from(books)
+    .where(whereClause)
     .groupBy(books.author)
-    .orderBy(books.author);
+    .orderBy(books.author)
+    .limit(100);
 
   let trimmedAuthorsArray: string[] = [];
 
-  authors
+  await authors
     .map((item) => item.author?.split(","))
     .map((items) => {
       items &&
@@ -45,5 +48,6 @@ export default defineEventHandler(async (event) => {
   return cleanedupAuthors
     .filter((item) => !symbolRegex.test(item))
     .filter((item) => item)
-    .sort((a, b) => a.localeCompare(b));
+    .sort((a, b) => a.localeCompare(b))
+    .filter((item) => item.toLowerCase().includes(q.toString().toLowerCase()));
 });

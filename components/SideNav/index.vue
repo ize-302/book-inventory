@@ -20,6 +20,9 @@
         <template #languages>
           <FiltersLanguages />
         </template>
+        <template #awards>
+          <FiltersAwards />
+        </template>
       </UAccordion>
     </div>
   </div>
@@ -41,6 +44,11 @@ const filters = [
     label: "Languages",
     icon: "i-heroicons-language",
     slot: "languages",
+  },
+  {
+    label: "Awards",
+    icon: "i-hugeicons:award-02",
+    slot: "awards",
   },
 ];
 </script>

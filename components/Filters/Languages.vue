@@ -1,12 +1,11 @@
 <template>
   <FiltersSearchInput
-    v-if="!loading"
     :placeholder="`Filter language...`"
     v-model="query"
+    @submit="fetchLanguages()"
   />
   <FiltersFilterItems
-    :items="filteredLanguages"
-    :totalCount="languages.length"
+    :items="languages"
     :limit="100"
     :loading="loading"
     filterType="languages"
@@ -15,28 +14,26 @@
 
 <script setup>
 const languages = ref([]);
-const filteredLanguages = ref([]);
 const query = ref("");
 const loading = ref(true);
 
 watch(query, async (newQuery, oldQuery) => {
-  if (newQuery.length > 0) {
-    const result = [...languages.value]
-      .map((item) => item.toLowerCase())
-      .filter((author) => author.includes(newQuery.toLowerCase()));
-    filteredLanguages.value = result;
-  } else if (newQuery.length === 0) {
-    filteredLanguages.value = languages.value;
+  if (query.value.length === 0) {
+    await fetchLanguages();
   }
 });
 
-onMounted(async () => {
-  await nextTick();
+const fetchLanguages = async () => {
+  loading.value = true;
   try {
-    const result = await $fetch(`/api/languages`);
+    const result = await $fetch(`/api/languages?q=${query.value}`);
     languages.value = result;
-    filteredLanguages.value = result;
     loading.value = false;
   } catch (error) {}
+};
+
+onMounted(async () => {
+  await nextTick();
+  await fetchLanguages();
 });
 </script>
